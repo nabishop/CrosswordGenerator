@@ -2,14 +2,24 @@ package logic;
 
 public class Driver {
     public static void main(String[] args) {
-        String[] input = {"firehouse", "firehouse", "firehouse", "firehouse", "firehouse", "firehouse", "firehouse", "firehouse", "firehouse", "firehouse", "firehouse", "firehouse", "firehouse", "firehouse", "firehouse"};
-        System.out.println(CrosswordGenerator.getTableSize(input));
+        String[] input = {"alex", "jonah", "nick", "school", "magic", "weather", "rainbow", "car", "superfastspacecar", "arugula","commotion","retainer"};
+        String[] input2 = {"METHIONYLTHREONYLTHREONYGLUTAMINYLARGINYL", "LOPADOTEMACHOSELACHOGALEOKRANIOLEIPSAN","PNEUMONOULTRAMICROSCOPICSILICOVOLCANOCONIOSIS","PSEUDOPSEUDOHYPOPARATHYROIDISM"};
+        CrosswordGenerator generator = new CrosswordGenerator();
 
-        int[][] table = CrosswordGenerator.initializeTable(input);
-        printIntTable(table);
+        char[][] crossword = generator.getCrossword(input);
+        printTable(crossword);
     }
 
-    private static void printIntTable(int[][] table) {
+    private static void printTable(int[][] table) {
+        for (int i = 0; i < table.length; i++) {
+            for (int j = 0; j < table[i].length; j++) {
+                System.out.print(table[i][j] + "\t");
+            }
+            System.out.println();
+        }
+    }
+
+    private static void printTable(char[][] table) {
         for (int i = 0; i < table.length; i++) {
             for (int j = 0; j < table[i].length; j++) {
                 System.out.print(table[i][j] + "\t");

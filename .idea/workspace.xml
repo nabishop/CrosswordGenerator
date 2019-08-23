@@ -67,4 +67,9 @@
     </task>
     <servers />
   </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/Crossword_Generator$Driver.ic" NAME="Driver Coverage Results" MODIFIED="1566341019715" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>logic.*</FILTER>
+    </SUITE>
+  </component>
 </project>
