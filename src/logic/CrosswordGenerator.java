@@ -8,30 +8,26 @@ public class CrosswordGenerator {
 
     private char[][] crossword;
     private int[][] pointsTable;
-    private Set<String> hashWords = new HashSet<>();
-    private Map<Character, Integer> specialCharacters = new HashMap<>();
-
-    private int padding = 0;
+    private final Set<String> hashWords = new HashSet<>();
+    private final HashMap<Character, Integer> specialCharacters = initializesSpecialCharacters();
 
     public char[][] getCrossword(String[] words) {
         if (words.length < 1) {
             return null;
         }
 
+        this.hashWords.clear();
         this.hashWords.addAll(Arrays.asList(words));
-        System.out.println(hashWords.toString());
-
-        if (specialCharacters.size() == 0) {
-            initializesSpecialCharacters();
-        }
 
         initializePointsTable(words);
         fillInCrossword(words);
         trimTable();
-        return expandCrosswordPadding(2);
+        return crossword;
     }
 
-    private void initializesSpecialCharacters() {
+    private HashMap<Character, Integer> initializesSpecialCharacters() {
+        HashMap<Character, Integer> spChars = new HashMap<>();
+
         int low = DEFAULT_CHAR_WORTH + 2;
         int lowMedium = DEFAULT_CHAR_WORTH + 4;
         int medium = DEFAULT_CHAR_WORTH + 6;
@@ -39,19 +35,21 @@ public class CrosswordGenerator {
         int high = DEFAULT_CHAR_WORTH + 10;
         int extreme = DEFAULT_CHAR_WORTH + 15;
 
-        specialCharacters.put('c', low);
-        specialCharacters.put('f', lowMedium);
-        specialCharacters.put('g', lowMedium);
-        specialCharacters.put('j', medium);
-        specialCharacters.put('k', lowMedium);
-        specialCharacters.put('p', medium);
-        specialCharacters.put('q', extreme);
-        specialCharacters.put('u', mediumHigh);
-        specialCharacters.put('v', high);
-        specialCharacters.put('w', high);
-        specialCharacters.put('x', extreme);
-        specialCharacters.put('y', high);
-        specialCharacters.put('z', extreme);
+        spChars.put('c', low);
+        spChars.put('f', lowMedium);
+        spChars.put('g', lowMedium);
+        spChars.put('j', medium);
+        spChars.put('k', lowMedium);
+        spChars.put('p', medium);
+        spChars.put('q', extreme);
+        spChars.put('u', mediumHigh);
+        spChars.put('v', high);
+        spChars.put('w', high);
+        spChars.put('x', extreme);
+        spChars.put('y', high);
+        spChars.put('z', extreme);
+
+        return spChars;
     }
 
     /**
@@ -341,8 +339,8 @@ public class CrosswordGenerator {
     }
 
     private void buildSmallerTable(int minI, int minJ, int maxI, int maxJ) {
-        int verticalLength = maxI - minI;
-        int horizontalLength = maxJ - minJ;
+        int verticalLength = maxI - minI + 1;
+        int horizontalLength = maxJ - minJ + 1;
         char[][] smallerTable = new char[verticalLength][horizontalLength];
 
         for (int i = 0; i < verticalLength; i++) {
@@ -355,25 +353,27 @@ public class CrosswordGenerator {
         this.crossword = smallerTable;
     }
 
-    private char[][] expandCrosswordPadding(int padding) {
+    public char[][] expandCrosswordPadding(int padding) {
         if (this.crossword == null || this.crossword.length == 0) {
             return null;
         }
 
-        int verticalLength = this.crossword.length + (padding * 4);
-        int horizontalLength = this.crossword[0].length + (padding * 4);
+        int verticalLength = this.crossword.length + (padding * 2);
+        int horizontalLength = this.crossword[0].length + (padding * 2);
 
         int emptyI = 0, emptyJ = 0;
 
         char[][] newCrossword = new char[verticalLength][horizontalLength];
         for (int i = 0; i < verticalLength; i++) {
+            boolean isEmptyI = i < padding || i - emptyI >= this.crossword.length;
+            emptyI = isEmptyI ? emptyI + 1 : emptyI;
+            emptyJ = 0;
             for (int j = 0; j < horizontalLength; j++) {
-                if (i < padding || i + padding >= verticalLength) {
-                    emptyI++;
+                if (isEmptyI) {
                     newCrossword[i][j] = EMPTY_CHAR;
-                } else if (j < padding || j + padding >= horizontalLength) {
+                } else if (emptyJ < padding || j - emptyJ >= this.crossword[0].length) {
+                    newCrossword[i][j] = EMPTY_CHAR;
                     emptyJ++;
-                    newCrossword[i][j] = EMPTY_CHAR;
                 } else {
                     newCrossword[i][j] = this.crossword[i - emptyI][j - emptyJ];
                 }
@@ -381,7 +381,6 @@ public class CrosswordGenerator {
         }
 
         this.crossword = newCrossword;
-        this.padding = padding;
         return this.crossword;
     }
 

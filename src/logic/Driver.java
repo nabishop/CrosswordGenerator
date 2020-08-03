@@ -8,6 +8,7 @@ public class Driver {
 
         char[][] crossword = generator.getCrossword(input);
         printTable(crossword);
+        printTable(generator.expandCrosswordPadding(1));
     }
 
     private static void printTable(int[][] table) {
