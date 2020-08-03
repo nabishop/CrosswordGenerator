@@ -1,5 +1,7 @@
 package logic;
 
+import model.Crossword;
+
 import java.util.*;
 
 public class CrosswordGenerator {
@@ -9,7 +11,15 @@ public class CrosswordGenerator {
     private char[][] crossword;
     private int[][] pointsTable;
     private final Set<String> hashWords = new HashSet<>();
-    private final HashMap<Character, Integer> specialCharacters = initializesSpecialCharacters();
+    private HashMap<Character, Integer> specialCharacters;
+
+    public CrosswordGenerator() {
+        this.specialCharacters = initializesSpecialCharacters();
+    }
+
+    public CrosswordGenerator(HashMap<Character, Integer> specialCharacters) {
+        this.specialCharacters = specialCharacters;
+    }
 
     public char[][] getCrossword(String[] words) {
         if (words.length < 1) {
